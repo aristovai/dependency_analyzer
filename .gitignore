@@ -1,0 +1,10 @@
+pycache/
+*.pyc
+*.pyo
+.venv/
+venv/
+.idea/
+.vscode/
+.pytest_cache/
+
+*.svg

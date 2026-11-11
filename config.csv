@@ -1,0 +1,7 @@
+key,value
+package_name,requests
+repository,https://pypi.org
+test_mode,false
+output_file,result.svg
+max_depth,10
+filter_substring,none
