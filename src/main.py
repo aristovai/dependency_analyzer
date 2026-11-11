@@ -6,14 +6,10 @@ from src.graph import (
     print_graph,
     read_test_repository
 )
+from src.order import get_load_order, print_load_order
 
 
 def print_config(config):
-    """Выводит параметры конфигурации.
-
-    Args:
-        config: Словарь параметров.
-    """
     print("Параметры конфигурации:")
 
     for key, value in config.items():
@@ -21,11 +17,6 @@ def print_config(config):
 
 
 def main():
-    """Запускает анализ зависимостей пакета.
-
-    Returns:
-        Код завершения программы.
-    """
     parser = argparse.ArgumentParser(
         description="Анализатор зависимостей Python-пакетов"
     )
@@ -33,7 +24,7 @@ def main():
     parser.add_argument(
         "--config",
         default="config.csv",
-        help="Путь к файлу конфигурации"
+        help="Путь к CSV-файлу конфигурации"
     )
 
     args = parser.parse_args()
@@ -52,7 +43,11 @@ def main():
             )
 
         graph = build_graph(config, test_graph)
+
         print_graph(graph)
+
+        order = get_load_order(graph)
+        print_load_order(order)
 
         return 0
 
