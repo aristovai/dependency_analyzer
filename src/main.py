@@ -1,14 +1,18 @@
 import argparse
 
 from src.config import read_config, validate_config
-from src.repository import get_direct_dependencies
+from src.graph import (
+    build_graph,
+    print_graph,
+    read_test_repository
+)
 
 
 def print_config(config):
     """Выводит параметры конфигурации.
 
     Args:
-        config: Словарь с параметрами программы.
+        config: Словарь параметров.
     """
     print("Параметры конфигурации:")
 
@@ -16,25 +20,8 @@ def print_config(config):
         print(f"{key}: {value}")
 
 
-def print_dependencies(package_name, dependencies):
-    """Выводит прямые зависимости пакета.
-
-    Args:
-        package_name: Имя анализируемого пакета.
-        dependencies: Список прямых зависимостей.
-    """
-    print(f"\nПрямые зависимости пакета {package_name}:")
-
-    if not dependencies:
-        print("Зависимости не найдены")
-        return
-
-    for dependency in dependencies:
-        print(f"- {dependency}")
-
-
 def main():
-    """Запускает программу анализа зависимостей.
+    """Запускает анализ зависимостей пакета.
 
     Returns:
         Код завершения программы.
@@ -46,7 +33,7 @@ def main():
     parser.add_argument(
         "--config",
         default="config.csv",
-        help="Путь к CSV-файлу конфигурации"
+        help="Путь к файлу конфигурации"
     )
 
     args = parser.parse_args()
@@ -57,16 +44,15 @@ def main():
 
         print_config(config)
 
+        test_graph = None
+
         if config["test_mode"]:
-            print("\nТестовый режим будет реализован на этапе 3")
-            return 0
+            test_graph = read_test_repository(
+                config["repository"]
+            )
 
-        dependencies = get_direct_dependencies(
-            config["repository"],
-            config["package_name"]
-        )
-
-        print_dependencies(config["package_name"], dependencies)
+        graph = build_graph(config, test_graph)
+        print_graph(graph)
 
         return 0
 
